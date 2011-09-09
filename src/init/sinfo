@@ -5,8 +5,8 @@
 # Required-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Daemon para verificar o path dos databases de anti-spam das dolphs
-# Description:       Daemon para verificar o path dos databases de anti-spam das dolphs
+# Short-Description: Python system information
+# Description:       Python system information
 ### END INIT INFO
 
 # Author: Francisco Freire <wgrcunha@gmail.com>
@@ -26,7 +26,7 @@ SCRIPTNAME=/etc/init.d/$NAME
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
 # Define LSB log_* functions.
-. /lib/lsb/init-functions
+#. /lib/lsb/init-functions
 
 create_xconsole() {
     XCONSOLE=/dev/xconsole
@@ -78,7 +78,7 @@ case "$1" in
     $DAEMON -a start
     ;;
   status)
-    status_of_proc -p $DAEMON_PIDFILE $DAEMON_BIN $DAEMON && exit 0 || exit $?
+    $DAEMON -a status
     ;;
   *)
     echo "Usage: $SCRIPTNAME {start|stop|restart|status}" >&2
