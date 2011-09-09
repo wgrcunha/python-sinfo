@@ -1,0 +1,8 @@
+Python System INFO monitor
+
+First version, just print the json output to the log: /var/log/sinfo.log every "timereport" seconds.
+
+TODO: 
+ - POST to webserver.
+ - Add more plugins.
+ - Expand SO compatibility (Current only Linux)
