@@ -5,7 +5,7 @@ import json
 import time
 import getopt
 import socket
-from supay import Daemon
+from sinfo.supay import Daemon
 from ConfigParser import ConfigParser
 
 class SysInfo:
