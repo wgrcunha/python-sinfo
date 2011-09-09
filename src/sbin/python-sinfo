@@ -1,0 +1,69 @@
+#!/usr/bin/python
+import os
+import sys
+import json
+import time
+import getopt
+import socket
+from supay import Daemon
+from ConfigParser import ConfigParser
+
+class SysInfo:
+
+    def __init__(self, timereport):
+        self.timereport = timereport
+        self.os = os.uname()[0]
+
+        if self.os == 'Linux':
+            from sinfo import Linux
+            self.plugins = Linux.ALL
+
+    def loop(self):
+        while True:
+            data = {}
+            for plugin in self.plugins:
+                data[plugin.func_name] = plugin()
+            self.report(data)
+            time.sleep(self.timereport)
+
+    def report(self, data):
+        data = json.dumps(data)
+        print data
+            
+def usage():
+    print "Usage: %s -a [start|stop|status]"
+    sys.exit(1)
+
+def main():
+    config = ConfigParser()
+    section = 'sinfo'
+    config.read("/etc/sinfo.cfg")
+    timereport = config.getint(section, 'timereport')
+    url = config.get(section, 'webserver')
+
+    sinfo = SysInfo(timereport)
+    sinfo.loop()
+
+if __name__ == "__main__":
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "a:", ["action="])
+    except getopt.GetoptError, err:
+        print str(err)
+        usage()
+
+    action = None
+    for o, a in opts:
+        if o in ('-a', '--action'):
+            action = a
+
+    if not action:
+        usage()
+
+    daemon = Daemon(name='sinfo', catch_all_log="/var/log/sinfo.log")
+    if action == 'start':
+        daemon.start()
+        main()
+    elif action == 'status':
+        daemon.status()
+    elif action == 'stop':
+        daemon.stop()
