@@ -24,4 +24,16 @@ def meminfo():
                 data[line[0]] = line[1].strip()
     return data
 
-ALL = [ hostinfo, cpuinfo, meminfo ]
+def mounts():
+    data = {}
+    filename = '/proc/mounts'
+    if os.path.isfile(filename):
+        for line in [ line.strip().split() for line in open(filename).readlines() ]:
+            if len(line) > 3 and line[0] not in ['none', 'rootfs']:
+                data[line[1]] = {
+                    'fstype': line[2],
+                    'device': line[0]
+                }
+    return data
+
+ALL = [ hostinfo, cpuinfo, meminfo, mounts ]
