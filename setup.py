@@ -2,7 +2,7 @@
 from distutils.core import setup
 
 setup(name='sinfo',
-      version='0.0-2',
+      version='0.0-3',
       description='Python system info',
       author='Francisco Freire',
       author_email='wgrcunha@gmail.com',

@@ -10,19 +10,28 @@ from ConfigParser import ConfigParser
 
 class SysInfo:
 
-    def __init__(self, timereport):
+    def __init__(self, timereport, config):
         self.timereport = timereport
         self.os = os.uname()[0]
+        self.config = config
 
         if self.os == 'Linux':
             from sinfo import Linux
             self.plugins = Linux.ALL
 
+        if config.getboolean("apache", "enabled"):
+            from sinfo import Apache
+            Apache.url = config.get("apache", "url")
+            self.plugins += Apache.ALL
+            
+
     def loop(self):
         while True:
             data = {}
+
             for plugin in self.plugins:
                 data[plugin.func_name] = plugin()
+
             self.report(data)
             time.sleep(self.timereport)
 
@@ -41,7 +50,7 @@ def main():
     timereport = config.getint(section, 'timereport')
     url = config.get(section, 'webserver')
 
-    sinfo = SysInfo(timereport)
+    sinfo = SysInfo(timereport, config)
     sinfo.loop()
 
 if __name__ == "__main__":
