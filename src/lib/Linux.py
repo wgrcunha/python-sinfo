@@ -1,9 +1,8 @@
 import os
-import socket
 
 def hostinfo():
     data = {}
-    data['hostname'] = socket.gethostname()
+    data['os'], data['hostname'], data['kernel'], data['kernelcomp'], data['arch'] = os.uname()
     return data
 
 def cpuinfo():
